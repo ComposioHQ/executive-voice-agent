@@ -12,5 +12,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return gmailTools.createDraft(composioUserId, to, subject, emailBody);
-  });
+  }, 'create_email_draft');
 }

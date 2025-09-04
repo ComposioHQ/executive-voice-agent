@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@composio/core": "^0.1.48",
+    "@modelcontextprotocol/sdk": "^1.17.5",
     "@vapi-ai/web": "^2.3.10",
     "dotenv": "^17.2.1",
     "next": "15.5.2",

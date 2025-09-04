@@ -14,5 +14,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return calendarTools.createEvent(composioUserId, summary, startDateTime, endDateTime, attendees, location);
-  });
+  }, 'create_calendar_event');
 }

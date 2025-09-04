@@ -14,5 +14,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return gmailTools.sendEmail(composioUserId, to, subject, emailBody, cc, bcc);
-  });
+  }, 'send_email');
 }

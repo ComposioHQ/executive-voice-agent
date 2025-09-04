@@ -12,5 +12,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return calendarTools.findFreeSlots(composioUserId, timeMin, timeMax, duration);
-  });
+  }, 'find_free_time_slots');
 }

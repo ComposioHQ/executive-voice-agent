@@ -9,5 +9,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return slackTools.listConversations(composioUserId);
-  });
+  }, 'list_slack_conversations');
 }

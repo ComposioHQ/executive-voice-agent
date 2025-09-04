@@ -10,5 +10,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return gmailTools.fetchEmails(composioUserId, maxResults);
-  });
+  }, 'fetch_emails');
 }

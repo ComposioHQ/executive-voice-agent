@@ -43,11 +43,40 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
     });
 
     vapiInstance.on('message', (message) => {
-      if (message.type === 'transcript') {
-        setTranscript(prev => [...prev, {
-          role: message.role,
-          text: message.transcript
-        }]);
+      console.log('Received message:', message);
+      
+      if (message.type === 'transcript' && message.transcriptType === 'final') {
+        setTranscript(prev => {
+          // Check if this is a duplicate message
+          const lastMessage = prev[prev.length - 1];
+          if (lastMessage && 
+              lastMessage.role === message.role && 
+              lastMessage.text === message.transcript) {
+            return prev; // Don't add duplicate
+          }
+          
+          return [...prev, {
+            role: message.role,
+            text: message.transcript
+          }];
+        });
+      }
+      
+      // Log tool-related messages
+      if (message.type === 'tool-calls' || message.type === 'function-call') {
+        console.log('Tool call initiated:', message);
+      }
+      
+      if (message.type === 'tool-call-result' || message.type === 'function-call-result') {
+        console.log('Tool call result:', message);
+      }
+      
+      // Check for conversation updates that include tool results
+      if (message.type === 'conversation-update' && message.messages) {
+        const lastMessage = message.messages[message.messages.length - 1];
+        if (lastMessage && lastMessage.role === 'tool_call_result') {
+          console.log('Tool call completed successfully!');
+        }
       }
     });
 
@@ -81,7 +110,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
           messages: [
             {
               role: "system" as const,
-              content: `You are an AI executive assistant with full access to Gmail, Google Calendar, and Slack tools. 
+              content: `You are an AI executive assistant with full access to Gmail, Google Calendar, and Slack tools. You are friendly, conversational, and always keep the user engaged.
 
 📧 GMAIL TOOLS:
 - fetch_emails: Get recent emails from inbox
@@ -98,7 +127,16 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
 - create_slack_channel: Create new Slack channels
 - list_slack_conversations: List available channels
 
-Always execute tool calls confidently. When tools succeed, share the results clearly with the user. Be proactive in suggesting related actions and helpful in managing the user's digital workspace.`
+CONVERSATION STYLE:
+- When you need to use a tool, immediately acknowledge the request and let the user know you're working on it
+- ALWAYS end your acknowledgment with an engaging question to keep the conversation flowing
+- Examples:
+  * "Let me fetch your latest emails for you. This will just take a moment - how has your day been going so far?"
+  * "I'll create that calendar event right now. While I'm setting that up, what's the most important thing on your agenda this week?"
+  * "I'm sending that Slack message for you. By the way, are you working on any exciting projects lately?"
+- Keep the user engaged with friendly small talk while tools execute
+- When you get the tool results, respond naturally and provide the information clearly
+- Always be conversational and personable, not robotic`
             }
           ],
           tools: vapiToolsConfig.map(tool => ({
@@ -170,7 +208,7 @@ Always execute tool calls confidently. When tools succeed, share the results cle
           background: '#fff',
           borderRadius: '12px',
           padding: '20px',
-          width: '320px',
+          width: '480px',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
           border: '1px solid #e1e5e9'
         }}>
@@ -213,7 +251,7 @@ Always execute tool calls confidently. When tools succeed, share the results cle
           </div>
           
           <div style={{
-            maxHeight: '200px',
+            maxHeight: '800px',
             overflowY: 'auto',
             marginBottom: '12px',
             padding: '8px',

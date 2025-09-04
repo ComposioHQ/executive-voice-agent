@@ -12,5 +12,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return slackTools.sendMessage(composioUserId, channel, text, threadTs);
-  });
+  }, 'send_slack_message');
 }

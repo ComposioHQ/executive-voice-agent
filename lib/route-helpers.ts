@@ -36,10 +36,11 @@ export function createErrorResponse(toolCallId: string, error: string, status = 
   }, { status });
 }
 
-export function createSuccessResponse(toolCallId: string, result: ComposioToolResult) {
+export function createSuccessResponse(toolCallId: string, result: ComposioToolResult, toolName: string) {
   const response = {
     results: [{
       toolCallId,
+      name: toolName,
       result: result.successful 
         ? JSON.stringify(result.data)
         : `Error: ${result.error}`
@@ -52,7 +53,8 @@ export function createSuccessResponse(toolCallId: string, result: ComposioToolRe
 
 export async function handleToolRequest(
   request: NextRequest,
-  toolFunction: (args: Record<string, unknown>) => Promise<ComposioToolResult>
+  toolFunction: (args: Record<string, unknown>) => Promise<ComposioToolResult>,
+  toolName: string
 ) {
   try {
     const body = await request.json();
@@ -73,7 +75,7 @@ export async function handleToolRequest(
       timeoutPromise
     ]);
     
-    return createSuccessResponse(toolCallId, result);
+    return createSuccessResponse(toolCallId, result, toolName);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return createErrorResponse('error', errorMessage);

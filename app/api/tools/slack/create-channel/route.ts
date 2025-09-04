@@ -11,5 +11,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return slackTools.createChannel(composioUserId, name, isPrivate);
-  });
+  }, 'create_slack_channel');
 }

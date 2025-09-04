@@ -12,5 +12,5 @@ export async function POST(request: NextRequest) {
     };
     const composioUserId = userId || 'default';
     return calendarTools.findEvents(composioUserId, timeMin, timeMax, query);
-  });
+  }, 'find_calendar_events');
 }

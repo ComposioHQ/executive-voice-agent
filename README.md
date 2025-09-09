@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Executive Voice Assistant
+
+An intelligent voice-powered executive assistant that integrates with your productivity tools through natural conversation. Built with Next.js, Vapi AI, and Composio.
+
+## Features
+
+**🎤 Voice Interface**
+- Real-time voice conversations with AI assistant
+- Natural language processing for intuitive interactions
+- Visual conversation transcript
+
+**📧 Gmail Integration**
+- Fetch and read recent emails
+- Send emails to recipients
+- Create draft emails for later
+
+**📅 Calendar Management**  
+- Schedule new meetings and events
+- Search for existing calendar events
+- Find available time slots for scheduling
+
+**💬 Slack Integration**
+- Send messages to channels or users
+- Create new Slack channels
+- List available conversations
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+You'll need API keys for:
+- [Vapi AI](https://vapi.ai/) - For voice interface
+- [Composio](https://composio.dev/) - For tool integrations
+- [OpenAI](https://openai.com/) - For language model
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd executive-voice-agent
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+# Create .env.local file with:
+VAPI_API_KEY=your_vapi_api_key
+COMPOSIO_API_KEY=your_composio_api_key
+OPENAI_API_KEY=your_openai_api_key
+NEXT_PUBLIC_NGROK_URL=your_ngrok_url # For local development
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Connect your accounts through Composio:
+- Gmail/Google Calendar
+- Slack
 
-## Learn More
+5. Run the development server:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) to start using the voice assistant.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Click "Talk to Assistant" to start a voice conversation
+2. Ask the assistant to help with:
+   - "Check my latest emails"
+   - "Schedule a meeting for tomorrow at 2 PM"
+   - "Send a Slack message to the team"
+   - "Find my free time slots this week"
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Voice AI**: Vapi AI with OpenAI GPT-4
+- **Integrations**: Composio for Gmail, Calendar, Slack
+- **Styling**: Tailwind CSS
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+├── app/
+│   ├── api/tools/          # API endpoints for tool integrations
+│   │   ├── calendar/       # Calendar tool routes
+│   │   ├── gmail/          # Gmail tool routes
+│   │   └── slack/          # Slack tool routes
+│   └── page.tsx           # Main application page
+├── components/
+│   └── VoiceAgent.tsx     # Voice assistant component
+└── lib/
+    ├── composio.ts        # Composio client setup
+    ├── vapi-tools.ts      # Vapi tool configurations
+    └── route-helpers.ts   # API route utilities
+```
+
+## References
+
+- [Composio Documentation](https://docs.composio.dev) - Integration platform for connecting AI agents with external tools
+- [Vapi Custom Tools Documentation](https://docs.vapi.ai/tools/custom-tools) - Guide for creating custom tools in Vapi AI

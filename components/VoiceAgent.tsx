@@ -15,6 +15,7 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState<Array<{role: string, text: string}>>([]);
+  const [showToolPrompt, setShowToolPrompt] = useState(false);
 
   useEffect(() => {
     const vapiInstance = new Vapi(apiKey);
@@ -30,11 +31,14 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
       console.log('Call ended');
       setIsConnected(false);
       setIsSpeaking(false);
+      setShowToolPrompt(false);
     });
 
     vapiInstance.on('speech-start', () => {
       console.log('Assistant started speaking');
       setIsSpeaking(true);
+      // Hide tool prompt when assistant starts speaking
+      setShowToolPrompt(false);
     });
 
     vapiInstance.on('speech-end', () => {
@@ -76,6 +80,10 @@ const VapiWidget: React.FC<VapiWidgetProps> = ({
         const lastMessage = message.messages[message.messages.length - 1];
         if (lastMessage && lastMessage.role === 'tool_call_result') {
           console.log('Tool call completed successfully!');
+          // Show UI prompt after tool completion
+          setShowToolPrompt(true);
+          // Hide prompt after 10 seconds
+          setTimeout(() => setShowToolPrompt(false), 10000);
         }
       }
     });
@@ -286,6 +294,27 @@ CONVERSATION STYLE:
               ))
             )}
           </div>
+          
+          {/* Tool completion prompt */}
+          {showToolPrompt && (
+            <div style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: '#12A594',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '12px',
+              fontWeight: 'bold',
+              boxShadow: '0 2px 8px rgba(18, 165, 148, 0.3)',
+              animation: 'fadeIn 0.3s ease-in',
+              zIndex: 10
+            }}>
+              📝 Task completed! Say something to continue...
+            </div>
+          )}
         </div>
       )}
       
@@ -294,6 +323,10 @@ CONVERSATION STYLE:
           0% { opacity: 1; }
           50% { opacity: 0.5; }
           100% { opacity: 1; }
+        }
+        @keyframes fadeIn {
+          0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+          100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
       `}</style>
     </div>
